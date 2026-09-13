@@ -1,0 +1,65 @@
+# ==============================
+# General
+# ==============================
+.DS_Store
+Thumbs.db
+
+# ==============================
+# Backend - Java / Maven
+# ==============================
+backend/target/
+backend/.mvn/timing.properties
+
+# Java compiled files
+*.class
+
+# Logs
+*.log
+
+# ==============================
+# IDEs
+# ==============================
+.idea/
+*.iml
+*.iws
+*.ipr
+
+.vscode/
+.project
+.classpath
+.settings/
+
+# ==============================
+# Spring Boot
+# ==============================
+application-local.properties
+application-local.yml
+
+# ==============================
+# Frontend - Node / React
+# ==============================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# Environment files
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# ==============================
+# Environment / Secrets
+# ==============================
+.env
+.env.local
+.env.*.local
+
+# ==============================
+# OS / Temporary files
+# ==============================
+*.tmp
+*.swp
+*.swo
