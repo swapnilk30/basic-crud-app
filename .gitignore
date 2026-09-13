@@ -1,65 +1,139 @@
+# ==============================================================
+# Basic CRUD App — Monorepo .gitignore
+# Layout:
+#   backend/basic-crud-app/   (Spring Boot + Maven)
+#   frontend/react-js/        (React + Vite, JavaScript)
+#   frontend/react-ts/        (React + Vite, TypeScript)
+# ==============================================================
+
 # ==============================
 # General
 # ==============================
 .DS_Store
 Thumbs.db
-
-# ==============================
-# Backend - Java / Maven
-# ==============================
-backend/target/
-backend/.mvn/timing.properties
-
-# Java compiled files
-*.class
-
-# Logs
 *.log
+*.tmp
+*.swp
+*.swo
 
 # ==============================
-# IDEs
+# Java / Maven (backend/**)
 # ==============================
-.idea/
-*.iml
-*.iws
-*.ipr
+# Any target/ dir at any depth (e.g., backend/basic-crud-app/target/)
+**/target/
 
-.vscode/
-.project
-.classpath
-.settings/
+# Keep the Maven wrapper (must be tracked for CI)
+!**/mvnw
+!**/mvnw.cmd
+!**/.mvn/wrapper/maven-wrapper.jar
+!**/.mvn/wrapper/maven-wrapper.properties
 
-# ==============================
-# Spring Boot
-# ==============================
+# Maven helper files
+**/.mvn/timing.properties
+dependency-reduced-pom.xml
+
+# Java compiled output
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+
+# Spring Boot local overrides (never commit secrets)
 application-local.properties
 application-local.yml
+application-*-local.properties
+application-*-local.yml
+
+# Spring Boot logs
+**/spring.log
 
 # ==============================
-# Frontend - Node / React
+# Node / React (frontend/**)
 # ==============================
-frontend/node_modules/
-frontend/dist/
-frontend/build/
-frontend/.vite/
+# Recursive — covers react-js, react-ts, and any future app
+**/node_modules/
+**/dist/
+**/build/
+**/.vite/
+**/.cache/
+**/.parcel-cache/
+**/.eslintcache
+**/.stylelintcache
 
-# Environment files
-frontend/.env
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
+# Node logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# TypeScript build info (react-ts)
+**/*.tsbuildinfo
+
+# Vite env files (may contain secrets)
+**/.env
+**/.env.local
+**/.env.*.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+
+# Storybook (if added later)
+**/storybook-static/
 
 # ==============================
-# Environment / Secrets
+# Environment / Secrets (root)
 # ==============================
 .env
 .env.local
 .env.*.local
 
 # ==============================
-# OS / Temporary files
+# Databases / Runtime
 # ==============================
-*.tmp
-*.swp
-*.swo
+# H2 file-mode artifacts
+*.mv.db
+*.trace.db
+*.lock.db
+
+# H2 default data folder (if you switch to file mode)
+/data/
+
+# ==============================
+# IDEs / Editors
+# ==============================
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+.project
+.classpath
+.settings/
+.factorypath
+nbproject/private/
+
+# ==============================
+# OS / Temp
+# ==============================
+*~
+\#*\#
+.\#*
+
+# ==============================
+# Build tool caches
+# ==============================
+.gradle/
+build/
+!**/src/**/build/
+
+# ==============================
+# Test / Coverage outputs
+# ==============================
+**/coverage/
+**/.nyc_output/
+**/test-results/
+**/playwright-report/
