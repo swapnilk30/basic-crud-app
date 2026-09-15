@@ -3,6 +3,7 @@ package com.example.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -29,7 +30,10 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler accessDeniedHandler;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, Environment env) throws Exception {
+
+        boolean isDev = env.matchesProfiles("dev");
+
         http
                 .csrf(csrf -> csrf.disable())
                 .headers(h -> h.frameOptions(f -> f.sameOrigin()))  // for H2 console
@@ -38,19 +42,23 @@ public class SecurityConfig {
                         .authenticationEntryPoint(entryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/register",
-                                "/api/auth/login",
-                                "/api/auth/refresh",
-                                "/actuator/health",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/h2-console/**"
-                        ).permitAll()
-                        .requestMatchers("/api/admin/**", "/actuator/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMIN")
+                        // 1. Public endpoints
+                        .requestMatchers(ApiEndpoints.Public.ALL).permitAll()
+                        // 2. Dev-only (profile-gated)
+                        .requestMatchers(ApiEndpoints.Dev.H2_CONSOLE).permitAll()
+                        // 3. Admin-only
+                        .requestMatchers(ApiEndpoints.Admin.ALL).hasRole("ADMIN")
+                        // 4. Role-based business endpoints
+                        .requestMatchers(ApiEndpoints.Business.EMPLOYEES)
+                        .hasAnyRole("ADMIN", "HR")
+                        .requestMatchers(ApiEndpoints.Business.REPORTS)
+                        .hasAnyRole("ADMIN", "ANALYST")
+                        .requestMatchers(ApiEndpoints.Business.MERCHANTS)
+                        .hasAnyRole("ADMIN", "MERCHANT_MANAGER")
+
+                        // 5. Everything else requires authentication
                         .anyRequest().authenticated())
+
                 // 👇 No authenticationProvider() call — Spring auto-detects:
                 //    - UserDetailsService bean
                 //    - PasswordEncoder bean
