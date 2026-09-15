@@ -28,15 +28,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
 
+        System.out.println("Authorization Header: " + header);
+
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
         String token = header.substring(7);
-
+        System.out.println("Token: " + token);
         try {
             Claims claims = jwtService.parse(token);
             String username = claims.getSubject();
+            System.out.println("Username from JWT: " + username);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails user = userDetailsService.loadUserByUsername(username);
@@ -49,6 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception ignored) {
+            System.out.println("Invalid token");
             // invalid token → leave context empty; entry point will 401
         }
         filterChain.doFilter(request, response);
