@@ -1,4 +1,4 @@
-package com.example.merchant.entity;
+package com.example.pg.entity;
 
 import com.example.core.entity.BaseEntity;
 import jakarta.persistence.Entity;

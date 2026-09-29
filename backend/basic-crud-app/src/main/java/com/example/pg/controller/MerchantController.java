@@ -1,4 +1,4 @@
-package com.example.merchant.controller;
+package com.example.pg.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
