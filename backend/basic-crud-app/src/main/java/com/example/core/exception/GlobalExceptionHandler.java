@@ -1,7 +1,9 @@
 package com.example.core.exception;
 
+import com.example.core.enums.CoreErrorCode;
 import com.example.core.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -17,24 +19,26 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
+    /* ---- 1. Any module exception extends BusinessException ---- */
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(
-            BusinessException ex) {
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
 
-        ErrorCode errorCode = ex.getErrorCode();
+        ErrorCode code = ex.getErrorCode();
+
+        log.warn("Business error. code={} message={}", code.getCode(), ex.getMessage());
 
         ErrorResponse response = ErrorResponse.builder()
-                .code(errorCode.getCode())
-                .detail(ex.getMessage())
+                .code(code.getCode())
+                .detail(ex.getMessage() != null ? ex.getMessage() : code.getMessage())
                 .build();
 
         return ResponseEntity
-                .status(errorCode.getHttpStatus())
+                .status(code.getHttpStatus())
                 .body(response);
     }
 
 
+    /* ---- 2. Bean validation ---- */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
             MethodArgumentNotValidException ex) {
@@ -44,55 +48,67 @@ public class GlobalExceptionHandler {
                 .stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
-                        fieldError -> fieldError.getDefaultMessage() != null
-                                ? fieldError.getDefaultMessage()
+                        fe -> fe.getDefaultMessage() != null
+                                ? fe.getDefaultMessage()
                                 : "Invalid value",
                         (existing, replacement) -> existing,
                         LinkedHashMap::new
                 ));
 
+        ErrorCode code = CoreErrorCode.VALIDATION_FAILED;
+
+        log.warn("Validation failed. fields={}", fieldErrors.keySet());
+
         ErrorResponse response = ErrorResponse.builder()
-                .code(ErrorCode.VALIDATION_FAILED.getCode())
-                .detail(ErrorCode.VALIDATION_FAILED.getMessage())
+                .code(code.getCode())
+                .detail(code.getMessage())
                 .fieldErrors(fieldErrors)
                 .build();
 
         return ResponseEntity
-                .status(ErrorCode.VALIDATION_FAILED.getHttpStatus())
+                .status(code.getHttpStatus())
                 .body(response);
     }
 
+
+    /* ---- 3. Malformed JSON / unreadable body ---- */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleInvalidRequestBody(
             HttpMessageNotReadableException ex) {
 
-        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
+        ErrorCode code = CoreErrorCode.BAD_REQUEST;
+
+        log.warn("Invalid request body: {}", ex.getMessage());
 
         ErrorResponse response = ErrorResponse.builder()
-                .code(errorCode.getCode())
-                .detail("Invalid request body")
+                .code(code.getCode())
+                .detail(code.getMessage())
                 .build();
 
         return ResponseEntity
-                .status(errorCode.getHttpStatus())
+                .status(code.getHttpStatus())
                 .body(response);
     }
 
+
+
+    /* ---- 4. Fallback ---- */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleUnexpectedException(
-            Exception ex) {
+    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
 
-        log.error("Unexpected application error", ex);
+        log.error("Unhandled exception", ex);
 
-        ErrorCode errorCode = ErrorCode.INTERNAL_ERROR;
+        ErrorCode code = CoreErrorCode.INTERNAL_ERROR;
 
         ErrorResponse response = ErrorResponse.builder()
-                .code(errorCode.getCode())
-                .detail(errorCode.getMessage())
+                .code(code.getCode())
+                .detail(code.getMessage())
                 .build();
 
         return ResponseEntity
-                .status(errorCode.getHttpStatus())
+                .status(code.getHttpStatus())
                 .body(response);
     }
+
+
 }

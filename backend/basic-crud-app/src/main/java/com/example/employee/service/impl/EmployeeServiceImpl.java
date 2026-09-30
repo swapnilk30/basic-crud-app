@@ -1,9 +1,9 @@
 package com.example.employee.service.impl;
 
-import com.example.core.exception.ErrorCode;
-import com.example.core.exception.ResourceNotFoundException;
+
 import com.example.employee.dto.request.EmployeeRequest;
 import com.example.employee.entity.Employee;
+import com.example.employee.exception.EmployeeNotFoundException;
 import com.example.employee.repository.EmployeeRepository;
 import com.example.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +41,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee getEmployeeById(Long id) {
 
         return employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        ErrorCode.EMPLOYEE_NOT_FOUND,
-                        "Employee not found with id: " + id
-                ));
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
+
     }
 
     @Override
