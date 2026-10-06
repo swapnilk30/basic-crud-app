@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 
 public enum PgErrorCode implements ErrorCode {
 
+
+    INSTITUTION_NOT_FOUND ("PG_INSTITUTION_NOT_FOUND", "Institution not found", HttpStatus.NOT_FOUND),
+
     TERMINAL_NOT_FOUND    ("PG_TERMINAL_NOT_FOUND",    "Terminal not found",            HttpStatus.NOT_FOUND),
     TERMINAL_NOT_ENABLED  ("PG_TERMINAL_NOT_ENABLED",  "Terminal is not enabled",       HttpStatus.FORBIDDEN),
     MERCHANT_NOT_FOUND    ("PG_MERCHANT_NOT_FOUND",    "Merchant not found",            HttpStatus.NOT_FOUND),

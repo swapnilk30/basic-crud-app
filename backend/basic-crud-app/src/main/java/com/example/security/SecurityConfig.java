@@ -50,11 +50,13 @@ public class SecurityConfig {
                         .requestMatchers(ApiEndpoints.Admin.ALL).hasRole("ADMIN")
                         // 4. Role-based business endpoints
                         .requestMatchers(ApiEndpoints.Business.EMPLOYEES)
-                        .hasAnyRole("ADMIN", "HR")
+                        .hasAnyRole("ADMIN", "HR" , "USER")
                         .requestMatchers(ApiEndpoints.Business.REPORTS)
                         .hasAnyRole("ADMIN", "ANALYST")
                         .requestMatchers(ApiEndpoints.Business.MERCHANTS)
                         .hasAnyRole("ADMIN", "MERCHANT_MANAGER")
+                        .requestMatchers(ApiEndpoints.Business.INSTUTIONS)
+                        .hasAnyRole("ADMIN", "USER")
 
                         // 5. Everything else requires authentication
                         .anyRequest().authenticated())

@@ -63,6 +63,7 @@ public final class ApiEndpoints {
         public static final String[] EMPLOYEES = { "/api/employees/**" };
         public static final String[] REPORTS   = { "/api/reports/**" };
         public static final String[] MERCHANTS = { "/api/merchants/**" };
+        public static final String[] INSTUTIONS = { "/api/v1/institutions/**" };
     }
 
     /* ============ Dev-only ============ */
