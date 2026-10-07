@@ -137,3 +137,10 @@ build/
 **/.nyc_output/
 **/test-results/
 **/playwright-report/
+
+# ==============================
+# Angular
+# ==============================
+**/.angular/
+**/out-tsc/
+**/.sass-cache/
