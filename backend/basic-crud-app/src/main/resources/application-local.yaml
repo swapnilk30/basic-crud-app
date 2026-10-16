@@ -1,0 +1,11 @@
+
+
+# ============================================================
+# Datasource ? MysSQL (dev-local)
+# ============================================================
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mydatabase
+    username: root
+    password: ${MYSQL_PASSWORD:password}

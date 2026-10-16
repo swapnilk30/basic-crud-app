@@ -1,0 +1,10 @@
+
+# ============================================================
+# Datasource ? MysSQL (dev) - docker
+# ============================================================
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3307/mydatabase
+    username: myuser
+    password: ${MYSQL_PASSWORD:mypassword}
