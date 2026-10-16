@@ -26,16 +26,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+        String path = request.getRequestURI();
 
-        System.out.println("Authorization Header: " + header);
+        // Skip logging for well-known public paths
+        boolean isPublic = path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/actuator")
+                || path.equals("/")
+                || path.equals("/favicon.ico");
+        //System.out.println("Requested Path: " + path);
 
-        if (header == null || !header.startsWith("Bearer ")) {
+
+        String authHeader = request.getHeader("Authorization");
+
+
+        if (!isPublic) {
+            System.out.println("Authorization Header: " + authHeader);
+        }
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
-        String token = header.substring(7);
+        String token = authHeader.substring(7);
+
         System.out.println("Token: " + token);
+
         try {
             Claims claims = jwtService.parse(token);
             String username = claims.getSubject();
