@@ -1,0 +1,4 @@
+name,email,phone,dateOfBirth,joiningDate,resignationDate
+Good Row,good@example.com,1111111111,1990-01-01,2020-01-01,
+Bad Date,baddate@example.com,2222222222,not-a-date,2020-01-01,
+Wrong Format,wrongfmt@example.com,3333333333,01/15/1990,2020-01-01,

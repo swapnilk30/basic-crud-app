@@ -1,0 +1,8 @@
+name,email,phone,dateOfBirth,joiningDate,resignationDate
+John Doe,john.doe@example.com,9876543210,1990-05-15,2020-01-10,
+Jane Smith,jane.smith@example.com,9876543211,1988-11-22,2019-03-01,
+Bob Wilson,bob.wilson@example.com,9876543212,1995-02-08,2021-07-15,2024-06-30
+Alice Brown,alice.brown@example.com,9876543213,1992-09-30,2018-12-01,
+Charlie Davis,charlie.davis@example.com,9876543214,1993-04-18,2022-02-20,
+Eva Green,eva.green@example.com,9876543215,1991-07-25,2020-11-05,
+Frank Miller,frank.miller@example.com,9876543216,1987-01-12,2015-06-10,2023-12-31
